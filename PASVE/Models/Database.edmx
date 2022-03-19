@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="PASVEModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Careers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="CreditValue" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="TotalCredits" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="fk_Departmet" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Departments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Careers__fk_Depa__29572725">
+          <End Role="Departments" Type="Self.Departments" Multiplicity="1" />
+          <End Role="Careers" Type="Self.Careers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Careers">
+              <PropertyRef Name="fk_Departmet" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="SP_CAREERS_DELETE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="uniqueidentifier" Mode="In" />
+        </Function>
+        <Function Name="SP_CAREERS_INSERT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="NAME" Type="nvarchar" Mode="In" />
+          <Parameter Name="CREDITVALUE" Type="decimal" Mode="In" />
+          <Parameter Name="TOTALCREDITS" Type="decimal" Mode="In" />
+          <Parameter Name="DEPARTMENT" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="SP_CAREERS_UPDATE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="NAME" Type="nvarchar" Mode="In" />
+          <Parameter Name="CREDITVALUE" Type="decimal" Mode="In" />
+          <Parameter Name="TOTALCREDITS" Type="decimal" Mode="In" />
+          <Parameter Name="DEPARTMENT" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="ACTIVE" Type="bit" Mode="In" />
+        </Function>
+        <EntityContainer Name="PASVEModelStoreContainer">
+          <EntitySet Name="Careers" EntityType="Self.Careers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Careers__fk_Depa__29572725" Association="Self.FK__Careers__fk_Depa__29572725">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Careers" EntitySet="Careers" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PASVEModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Career">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreditValue" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="TotalCredits" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="fk_Departmet" Type="Guid" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Department" Relationship="Self.FK__Careers__fk_Depa__29572725" FromRole="Careers" ToRole="Departments" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Careers" Relationship="Self.FK__Careers__fk_Depa__29572725" FromRole="Departments" ToRole="Careers" />
+        </EntityType>
+        <Association Name="FK__Careers__fk_Depa__29572725">
+          <End Role="Departments" Type="Self.Department" Multiplicity="1" />
+          <End Role="Careers" Type="Self.Career" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Departments">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Careers">
+              <PropertyRef Name="fk_Departmet" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PASVEEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Careers" EntityType="Self.Career" />
+          <EntitySet Name="Departments" EntityType="Self.Department" />
+          <AssociationSet Name="FK__Careers__fk_Depa__29572725" Association="Self.FK__Careers__fk_Depa__29572725">
+            <End Role="Departments" EntitySet="Departments" />
+            <End Role="Careers" EntitySet="Careers" />
+          </AssociationSet>
+          <FunctionImport Name="SP_CAREERS_DELETE">
+            <Parameter Name="ID" Mode="In" Type="Guid" />
+          </FunctionImport>
+          <FunctionImport Name="SP_CAREERS_INSERT">
+            <Parameter Name="NAME" Mode="In" Type="String" />
+            <Parameter Name="CREDITVALUE" Mode="In" Type="Decimal" />
+            <Parameter Name="TOTALCREDITS" Mode="In" Type="Decimal" />
+            <Parameter Name="DEPARTMENT" Mode="In" Type="Guid" />
+            <Parameter Name="ACTIVE" Mode="In" Type="Boolean" />
+          </FunctionImport>
+          <FunctionImport Name="SP_CAREERS_UPDATE">
+            <Parameter Name="ID" Mode="In" Type="Guid" />
+            <Parameter Name="NAME" Mode="In" Type="String" />
+            <Parameter Name="CREDITVALUE" Mode="In" Type="Decimal" />
+            <Parameter Name="TOTALCREDITS" Mode="In" Type="Decimal" />
+            <Parameter Name="DEPARTMENT" Mode="In" Type="Guid" />
+            <Parameter Name="ACTIVE" Mode="In" Type="Boolean" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PASVEModelStoreContainer" CdmEntityContainer="PASVEEntities">
+          <EntitySetMapping Name="Careers">
+            <EntityTypeMapping TypeName="PASVEModel.Career">
+              <MappingFragment StoreEntitySet="Careers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CreditValue" ColumnName="CreditValue" />
+                <ScalarProperty Name="TotalCredits" ColumnName="TotalCredits" />
+                <ScalarProperty Name="fk_Departmet" ColumnName="fk_Departmet" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="PASVEModel.Department">
+              <MappingFragment StoreEntitySet="Departments">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="SP_CAREERS_DELETE" FunctionName="PASVEModel.Store.SP_CAREERS_DELETE" />
+          <FunctionImportMapping FunctionImportName="SP_CAREERS_INSERT" FunctionName="PASVEModel.Store.SP_CAREERS_INSERT" />
+          <FunctionImportMapping FunctionImportName="SP_CAREERS_UPDATE" FunctionName="PASVEModel.Store.SP_CAREERS_UPDATE" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
