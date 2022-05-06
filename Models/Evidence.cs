@@ -19,8 +19,13 @@ namespace PASVE.Models
         public Guid LoadFor { get; set; }
         public DateTime UpdateAt { get; set; }
         public DateTime CreateAt { get; set; }
+        public Guid? FkChapter { get; set; }
+        public Guid? FkArticle { get; set; }
+        public Guid? FkSection { get; set; }
+        public Guid? FkParagraph { get; set; }
+        public Guid? FkNumeral { get; set; }
 
-        public virtual Installment Installment { get; set; } = null!;
+        public virtual Installment FkInstallmentNavigation { get; set; } = null!;
         public virtual User LoadForNavigation { get; set; } = null!;
         public virtual ICollection<EvidencesAuthor> EvidencesAuthors { get; set; }
     }

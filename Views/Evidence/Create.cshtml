@@ -9,32 +9,54 @@
 <h4>Evidence</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col">
         <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="File" class="control-label"></label>
-                <input asp-for="File" class="form-control"/>
-                <span asp-validation-for="File" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Authors" class="control-label"></label>
-                @Html.DropDownListFor(model => model.Authors, (MultiSelectList)ViewBag.Users, new { @class = "form-control" })
-            </div>
-            <br />
-            <br />
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="row">
+                <div class="col-md-4">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="File" class="control-label"></label>
+                        <input asp-for="File" class="form-control"/>
+                        <span asp-validation-for="File" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Authors" class="control-label"></label>
+                        @Html.DropDownListFor(model => model.Authors, (MultiSelectList)ViewBag.Users, "Selecciona los autores", new { @class = "form-control" })
+                    </div>
+                    <br />
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Create" class="btn btn-primary" />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="FkChapter" class="control-label">Capítulo</label>
+                        @Html.DropDownListFor(model => model.FkChapter, (SelectList)ViewBag.Chapters, "Seleciona un capítulo", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FkArticle" class="control-label">Artículo</label>
+                        @Html.DropDownListFor(model => model.FkArticle, (SelectList)ViewBag.Articles, "Seleciona un artículo", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FkSection" class="control-label">Literal</label>
+                        @Html.DropDownListFor(model => model.FkSection, (SelectList)ViewBag.Sections, "Seleciona un literal", new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FkNumeral" class="control-label">Numeral</label>
+                        @Html.DropDownListFor(model => model.FkNumeral, (SelectList)ViewBag.Numerals, "Seleciona un numeral", new { @class = "form-control" })
+                    </div>
+                </div>
             </div>
         </form>
     </div>

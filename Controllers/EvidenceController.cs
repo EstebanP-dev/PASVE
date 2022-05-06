@@ -10,6 +10,7 @@ namespace PASVE.Controllers
     {
         private readonly EvidenceService service = new EvidenceService();
         private readonly UserService userService = new UserService();
+        private readonly GeneralService generalService = new GeneralService();
         private readonly string ServerRoute;
 
         public EvidenceController(IConfiguration config)
@@ -56,9 +57,60 @@ namespace PASVE.Controllers
                         Text = u.Name,
                         Value = u.Id
                     });
-                ViewBag.Users = new SelectList(users, "Value", "Text");
+                ViewBag.Users = new MultiSelectList(users, "Value", "Text");
                 ViewBag.File = null;
-                return View();
+
+                var result2 = await generalService.GetChaptersAsync();
+                var result3 = await generalService.GetArticlesAsync();
+                //var result4 = await generalService.GetParagraphsAsync();
+                var result5 = await generalService.GetSectionsAsync();
+                var result6 = await generalService.GetNumeralsAsync();
+
+                if(result2.Success && result3.Success && result5.Success && result6.Success)
+                {
+                    var chapters = result2.Data
+                        .Select(u => new
+                        {
+                            Text = u.Name,
+                            Value = u.Id
+                        }).ToList();
+                    var articles = result3.Data
+                        .Select(u => new
+                        {
+                            Text = u.Name,
+                            Value = u.Id
+                        });
+                    //var paragraphs = result4.Data
+                    //    .Select(u => new
+                    //    {
+                    //        Text = u.Content,
+                    //        Value = u.Id
+                    //    });
+                    var sections = result5.Data
+                        .Select(u => new
+                        {
+                            Text = u.Content,
+                            Value = u.Id
+                        });
+                    var numerals = result6.Data
+                        .Select(u => new
+                        {
+                            Text = u.Content,
+                            Value = u.Id
+                        });
+                    ViewBag.Chapters = new SelectList(chapters, "Value", "Text");
+                    ViewBag.Articles = new SelectList(articles, "Value", "Text");
+                    ViewBag.Sections = new SelectList(sections, "Value", "Text");
+                    ViewBag.Numerals = new SelectList(numerals, "Value", "Text");
+                    //ViewBag.Paragraphs = new SelectList(chapters, "Value", "Text");
+
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction("Index");
+                }
+
             }
             else
             {

@@ -16,10 +16,12 @@ namespace PASVE.Models
         {
         }
 
+        public virtual DbSet<Article> Articles { get; set; } = null!;
         public virtual DbSet<Branch> Branches { get; set; } = null!;
         public virtual DbSet<BranchesDepartment> BranchesDepartments { get; set; } = null!;
         public virtual DbSet<Business> Businesses { get; set; } = null!;
         public virtual DbSet<Career> Careers { get; set; } = null!;
+        public virtual DbSet<Chapter> Chapters { get; set; } = null!;
         public virtual DbSet<City> Cities { get; set; } = null!;
         public virtual DbSet<Class> Classes { get; set; } = null!;
         public virtual DbSet<Classroom> Classrooms { get; set; } = null!;
@@ -31,8 +33,11 @@ namespace PASVE.Models
         public virtual DbSet<EvidencesAuthor> EvidencesAuthors { get; set; } = null!;
         public virtual DbSet<GenderType> GenderTypes { get; set; } = null!;
         public virtual DbSet<Installment> Installments { get; set; } = null!;
+        public virtual DbSet<Numeral> Numerals { get; set; } = null!;
+        public virtual DbSet<Paragraph> Paragraphs { get; set; } = null!;
         public virtual DbSet<Project> Projects { get; set; } = null!;
         public virtual DbSet<ProjectsClassesUser> ProjectsClassesUsers { get; set; } = null!;
+        public virtual DbSet<Section> Sections { get; set; } = null!;
         public virtual DbSet<State> States { get; set; } = null!;
         public virtual DbSet<Subject> Subjects { get; set; } = null!;
         public virtual DbSet<SubjectsCareer> SubjectsCareers { get; set; } = null!;
@@ -44,12 +49,32 @@ namespace PASVE.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB; Database=PASVE;Trusted_Connection=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=PASVE;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Article>(entity =>
+            {
+                entity.ToTable("Articles", "General");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.FkChapter).HasColumnName("fk_Chapter");
+
+                entity.HasOne(d => d.FkChapterNavigation)
+                    .WithMany(p => p.Articles)
+                    .HasForeignKey(d => d.FkChapter)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Articles__fk_Cha__79FD19BE");
+            });
+
             modelBuilder.Entity<Branch>(entity =>
             {
                 entity.ToTable("Branches", "University");
@@ -143,6 +168,17 @@ namespace PASVE.Models
                     .HasForeignKey(d => d.FkDirector)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Careers__fk_Dire__42ACE4D4");
+            });
+
+            modelBuilder.Entity<Chapter>(entity =>
+            {
+                entity.ToTable("Chapters", "General");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
             });
 
             modelBuilder.Entity<City>(entity =>
@@ -287,13 +323,23 @@ namespace PASVE.Models
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.FkArticle).HasColumnName("fk_Article");
+
+                entity.Property(e => e.FkChapter).HasColumnName("fk_Chapter");
+
                 entity.Property(e => e.FkInstallment).HasColumnName("fk_Installment");
+
+                entity.Property(e => e.FkNumeral).HasColumnName("fk_Numeral");
+
+                entity.Property(e => e.FkParagraph).HasColumnName("fk_Paragraph");
+
+                entity.Property(e => e.FkSection).HasColumnName("fk_Section");
 
                 entity.Property(e => e.UpdateAt)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
-                entity.HasOne(d => d.Installment)
+                entity.HasOne(d => d.FkInstallmentNavigation)
                     .WithMany(p => p.Evidences)
                     .HasForeignKey(d => d.FkInstallment)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -382,6 +428,58 @@ namespace PASVE.Models
                     .HasConstraintName("FK__Installme__fk_Pr__72910220");
             });
 
+            modelBuilder.Entity<Numeral>(entity =>
+            {
+                entity.ToTable("Numerals", "General");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.FkNumeral).HasColumnName("fk_Numeral");
+
+                entity.Property(e => e.FkSection).HasColumnName("fk_Section");
+
+                entity.HasOne(d => d.FkNumeralNavigation)
+                    .WithMany(p => p.InverseFkNumeralNavigation)
+                    .HasForeignKey(d => d.FkNumeral)
+                    .HasConstraintName("FK__Numerals__fk_Num__093F5D4E");
+
+                entity.HasOne(d => d.FkSectionNavigation)
+                    .WithMany(p => p.Numerals)
+                    .HasForeignKey(d => d.FkSection)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Numerals__fk_Sec__084B3915");
+            });
+
+            modelBuilder.Entity<Paragraph>(entity =>
+            {
+                entity.ToTable("Paragraphs", "General");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.FkArticle).HasColumnName("fk_Article");
+                entity.Property(e => e.FkArticle).HasColumnName("fk_Paragraph");
+
+                entity.HasOne(d => d.FkArticleNavigation)
+                    .WithMany(p => p.Paragraphs)
+                    .HasForeignKey(d => d.FkArticle)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Paragraph__fk_Ar__0FEC5ADD");
+
+                entity.HasOne(d => d.FkParagraphNavigation)
+                    .WithMany(p => p.Paragraphs)
+                    .HasForeignKey(d => d.FkParagraph)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Paragraph__fk_Pa__10E07F16");
+            });
+
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.ToTable("Projects", "Evidence");
@@ -441,6 +539,25 @@ namespace PASVE.Models
                     .HasForeignKey(d => d.FkUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Projects___fk_Us__56B3DD81");
+            });
+
+            modelBuilder.Entity<Section>(entity =>
+            {
+                entity.ToTable("Sections", "General");
+
+                entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Active)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.FkArticle).HasColumnName("fk_Article");
+
+                entity.HasOne(d => d.FkArticleNavigation)
+                    .WithMany(p => p.Sections)
+                    .HasForeignKey(d => d.FkArticle)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__Sections__fk_Art__038683F8");
             });
 
             modelBuilder.Entity<State>(entity =>
